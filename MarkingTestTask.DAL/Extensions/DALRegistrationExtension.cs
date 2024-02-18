@@ -7,10 +7,11 @@ namespace MarkingTestTask.DAL.Extensions
     {
         public static void RegisterDALDependencies(this IServiceCollection services)
         {
-            services.AddSingleton<MarkingTestTaskDBContext>();
+            services.AddDbContext<MarkingTestTaskDBContext>(ServiceLifetime.Transient);
             services.AddSingleton<IProductModelRepository, ProductModelRepository>();
             services.AddSingleton<IBoxModelRepository, BoxModelRepository>();
             services.AddSingleton<IPalletModelRepository, PalletModelRepository>();
+            services.AddSingleton<IMissionModelRepository, MissionModelRepository>();
         }
     }
 }

@@ -11,6 +11,7 @@ namespace MarkingTestTask.DAL
         public DbSet<ProductModel> Products { get; set; }
         public DbSet<BoxModel> Boxes { get; set; }
         public DbSet<PalletModel> Pallets { get; set; }
+        public DbSet<MissionModel> Missions { get; set; }
 
         public MarkingTestTaskDBContext(IConfiguration configuration)
         {

@@ -26,33 +26,15 @@ namespace MarkingTestTask.DAL.BaseRepository
             return await DbContext.Set<TEntity>().ToListAsync(cancellationToken);
         }
 
-        // Получение всех сущностей с учетом пагинации асинхронно
-        public virtual async Task<List<TEntity>> GetAllAsync(
-            int offset,
-            int limit,
-            CancellationToken cancellationToken = default
-        )
-        {
-            return await DbContext
-                .Set<TEntity>()
-                .Skip(offset)
-                .Take(limit)
-                .ToListAsync(cancellationToken);
-        }
-
         // Получение всех сущностей, удовлетворяющих условию, с учетом пагинации асинхронно
         public virtual async Task<List<TEntity>> GetAllAsync(
             Expression<Func<TEntity, bool>> where,
-            int offset,
-            int limit,
             CancellationToken cancellationToken = default
         )
         {
             return await DbContext
                 .Set<TEntity>()
                 .Where(where)
-                .Skip(offset)
-                .Take(limit)
                 .ToListAsync(cancellationToken);
         }
 

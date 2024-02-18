@@ -13,6 +13,9 @@ namespace MarkingTestTask.DAL.Configuration
             builder.HasOne(b => b.Pallet)
                    .WithMany(p => p.Boxes)
                    .HasForeignKey(b => b.PalletId);
+            builder.HasOne(p => p.Mission)
+               .WithMany(m => m.Boxes)
+               .HasForeignKey(p => p.MissionId);
         }
     }
 }

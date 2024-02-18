@@ -9,19 +9,10 @@ namespace MarkingTestTask.DAL.BaseRepository
         // Получение всех сущностей асинхронно
         Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
-        // Получение всех сущностей с учетом пагинации асинхронно
-        Task<List<TEntity>> GetAllAsync(
-            int offset,
-            int limit,
-            CancellationToken cancellationToken = default
-        );
-
-        // Получение всех сущностей, удовлетворяющих условию, с учетом пагинации асинхронно
+        // Получение всех сущностей, удовлетворяющих условию асинхронно
         Task<List<TEntity>> GetAllAsync(
             Expression<Func<TEntity, bool>> where,
-            int offset,
-            int limit,
-            CancellationToken cancellationToken
+            CancellationToken cancellationToken = default
         );
 
         // Получение сущности по идентификатору асинхронно

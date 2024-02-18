@@ -5,5 +5,6 @@ namespace MarkingTestTask.DAL.Contracts
 {
     public interface IPalletModelRepository : IBaseRepository<PalletModel>
     {
+        Task<List<PalletModel>> GetAllByMissionId(int missionId);
     }
 }

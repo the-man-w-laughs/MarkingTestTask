@@ -1,5 +1,6 @@
 ﻿using MarkingTestTask.BLL.Contracts;
 using MarkingTestTask.BLL.Dtos;
+using MarkingTestTask.Presentation.Mediator;
 using Microsoft.Win32;
 using System.Windows;
 
@@ -7,21 +8,20 @@ namespace MarkingTestTask.Presentation.MVVM
 {
     public class CurrentTaskViewModel : BaseViewModel
     {
-        private ProductLayoutInfoDto _currentTaskInfo;
-        public ProductLayoutInfoDto CurrentTaskInfo
+        private MissionDto _currentTaskInfo;
+        public MissionDto CurrentMissionInfo
         {
-            get { return _currentTaskInfo; }
-            set
-            {
-                _currentTaskInfo = value;
-                OnPropertyChanged(nameof(CurrentTaskInfo));
-            }
+            get => _currentTaskInfo;
+            set => SetProperty(ref _currentTaskInfo, value, nameof(CurrentMissionInfo));
         }
 
         private bool _isImportCodesButtonBusy;
-        private readonly IProductInfoRetrievalService _productInfoRetrievalService;
+        private readonly IMissionInfoRetrievalService _productInfoRetrievalService;
         private readonly ICodeImportService _codeImportService;
         private readonly IBoxPalletPopulationService _boxPalletPopulationService;
+        private readonly ICodesImportMediator _codesImportMediator;
+
+        public RelayCommand ImportCodesCommand { get; }
 
         public bool IsImportCodesButtonBusy
         {
@@ -29,11 +29,15 @@ namespace MarkingTestTask.Presentation.MVVM
             set => SetProperty(ref _isImportCodesButtonBusy, value, nameof(IsImportCodesButtonBusy));
         }
 
-        public CurrentTaskViewModel(IProductInfoRetrievalService productInfoRetrievalService, ICodeImportService codeImportService, IBoxPalletPopulationService boxPalletPopulationService)
+        public CurrentTaskViewModel(IMissionInfoRetrievalService productInfoRetrievalService,
+            ICodeImportService codeImportService,
+            IBoxPalletPopulationService boxPalletPopulationService,
+            ICodesImportMediator codesImportMediator)
         {
             _productInfoRetrievalService = productInfoRetrievalService;
             _codeImportService = codeImportService;
             _boxPalletPopulationService = boxPalletPopulationService;
+            _codesImportMediator = codesImportMediator;
             ImportCodesCommand = new RelayCommand(async parameter => await ImportCodesAsync(), (_) => !IsImportCodesButtonBusy);
 
             LoadProductInfo();
@@ -43,8 +47,9 @@ namespace MarkingTestTask.Presentation.MVVM
         {
             try
             {
-                var result = await _productInfoRetrievalService.GetProductInfoAsync();
-                CurrentTaskInfo = result;
+                var result = await _productInfoRetrievalService.GetMissionInfoAsync();
+                CurrentMissionInfo = result;
+                _codesImportMediator.NotifyCodesImported(CurrentMissionInfo);
             }
             catch (Exception ex)
             {
@@ -63,8 +68,10 @@ namespace MarkingTestTask.Presentation.MVVM
                 if (openFileDialog.ShowDialog() == true)
                 {
                     var selectedFilePath = openFileDialog.FileName;
-                    var codes = _codeImportService.ImportCodesFromFile(selectedFilePath, CurrentTaskInfo.Gtin);
-                    await _boxPalletPopulationService.PopulateBoxesAndPalletsAsync(CurrentTaskInfo, codes);
+                    var codes = _codeImportService.ImportCodesFromFile(selectedFilePath, CurrentMissionInfo!.Gtin);
+                    await _boxPalletPopulationService.PopulateBoxesAndPalletsAsync(CurrentMissionInfo, codes);
+                    _codesImportMediator.NotifyCodesImported(CurrentMissionInfo);
+                    MessageBox.Show("Коды успешно импортированы.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
@@ -76,6 +83,5 @@ namespace MarkingTestTask.Presentation.MVVM
                 IsImportCodesButtonBusy = false;
             }
         }
-        public RelayCommand ImportCodesCommand { get; }
     }
 }

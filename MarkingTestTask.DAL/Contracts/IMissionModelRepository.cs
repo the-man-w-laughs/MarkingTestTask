@@ -3,8 +3,8 @@ using MarkingTestTask.DAL.Models;
 
 namespace MarkingTestTask.DAL.Contracts
 {
-    public interface IBoxModelRepository : IBaseRepository<BoxModel>
+    public interface IMissionModelRepository : IBaseRepository<MissionModel>
     {
-        Task<List<BoxModel>> GetAllByMissionId(int missionId);
+        Task<MissionModel?> GetMissionById(int missionId);
     }
 }

@@ -5,6 +5,6 @@ namespace MarkingTestTask.BLL.Contracts
 {
     public interface IBoxPalletPopulationService
     {
-        Task PopulateBoxesAndPalletsAsync(ProductLayoutInfoDto productLayoutInfo, List<string> codes);
+        Task PopulateBoxesAndPalletsAsync(MissionDto missionDto, List<string> codes);
     }
 }

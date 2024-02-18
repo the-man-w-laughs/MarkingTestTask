@@ -7,59 +7,38 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Background="White">
-        <TextBlock Text="ЗАДАНИЕ НА РАСКЛАДКУ" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" Margin="0,10,0,20" FontSize="16"/>
-
+        <TextBlock Text="{Binding CurrentMissionInfo.MissionId, StringFormat='ЗАДАНИЕ НА РАСКЛАДКУ № {0}'}" 
+           HorizontalAlignment="Center" 
+           VerticalAlignment="Top" 
+           FontWeight="Bold" 
+           Margin="0,10,0,20" 
+           FontSize="16"/>
         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
             <Label Content="Название продукта:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
-            <TextBlock Text="{Binding CurrentTaskInfo.Name}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding CurrentMissionInfo.Name}" VerticalAlignment="Center" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
             <Label Content="GTIN:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
-            <TextBlock Text="{Binding CurrentTaskInfo.Gtin}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding CurrentMissionInfo.Gtin}" VerticalAlignment="Center" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="0,20,0,00">
             <Label Content="Объем бутылки:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
-            <TextBlock Text="{Binding CurrentTaskInfo.Volume}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding CurrentMissionInfo.Volume}" VerticalAlignment="Center" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
             <Label Content="Формат короба:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
-            <TextBlock Text="{Binding CurrentTaskInfo.BoxFormat}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding CurrentMissionInfo.BoxFormat}" VerticalAlignment="Center" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
             <Label Content="Формат паллеты:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0" />
-            <TextBlock Text="{Binding CurrentTaskInfo.PalletFormat}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding CurrentMissionInfo.PalletFormat}" VerticalAlignment="Center" />
         </StackPanel>
 
-        <Button Content="Импортировать коды" HorizontalAlignment="Left" Margin="20,20,0,0"
-    Command="{Binding ImportCodesCommand}">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                CornerRadius="5"
-                Padding="5">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#FFCCCCCC"/>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#FF999999"/>
-                        </Trigger>
-                        <DataTrigger Binding="{Binding IsImportCodesButtonBusy}" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="Gray"/>
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </DataTrigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
+        <Button Content="Импортировать коды" Command="{Binding ImportCodesCommand}" HorizontalAlignment="Left" Margin="10,0,0,0"/>
     </StackPanel>
 
 </UserControl>

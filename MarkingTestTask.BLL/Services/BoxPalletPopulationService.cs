@@ -9,21 +9,37 @@ namespace MarkingTestTask.BLL.Services
     {
         private readonly IBoxModelRepository _boxModelRepository;
         private readonly IPalletModelRepository _palletModelRepository;
+        private readonly IMissionModelRepository _missionModelRepository;
+        private readonly IProductModelRepository _productModelRepository;
 
         public BoxPalletPopulationService(
             IBoxModelRepository boxModelRepository,
-            IPalletModelRepository palletModelRepository)
+            IPalletModelRepository palletModelRepository,
+            IMissionModelRepository missionModelRepository,
+            IProductModelRepository productModelRepository)
         {
             _boxModelRepository = boxModelRepository;
             _palletModelRepository = palletModelRepository;
+            _missionModelRepository = missionModelRepository;
+            _productModelRepository = productModelRepository;
         }
 
         // Метод для заполнения коробок и палет асинхронно.
         // Принимает информацию о компоновке продукта и список кодов продуктов.
-        public async Task PopulateBoxesAndPalletsAsync(ProductLayoutInfoDto productLayoutInfo, List<string> codes)
+        public async Task PopulateBoxesAndPalletsAsync(MissionDto missionDto, List<string> codes)
         {
-            int boxFormat = productLayoutInfo.BoxFormat;
-            int palletFormat = productLayoutInfo.PalletFormat;
+            var missionModel = new MissionModel()
+            {
+                MissionId = missionDto.MissionId,
+                Volume = missionDto.Volume,
+                BoxFormat = missionDto.BoxFormat,
+                PalletFormat = missionDto.PalletFormat,
+                Name = missionDto.Name,
+                Gtin = missionDto.Gtin
+            };
+
+            int boxFormat = missionDto.BoxFormat;
+            int palletFormat = missionDto.PalletFormat;
 
             var products = codes.Select(code => new ProductModel
             {
@@ -51,33 +67,59 @@ namespace MarkingTestTask.BLL.Services
                 }
             }
 
-            await SaveEntitiesAsync(pallets, productLayoutInfo);
+            await SaveEntitiesAsync(pallets, missionModel);
         }
 
 
         // Метод для сохранения палет в репозитории.
-        private async Task SaveEntitiesAsync(List<PalletModel> pallets, ProductLayoutInfoDto productLayoutInfo)
+        private async Task SaveEntitiesAsync(List<PalletModel> pallets, MissionModel missionModel)
         {
+            var mission = await _missionModelRepository.GetAsync(mission => mission.MissionId == missionModel.MissionId);
+            if (mission == null)
+            {
+                mission = await _missionModelRepository.AddAsync(missionModel);
+                await _missionModelRepository.SaveAsync();
+            }
+
             foreach (var pallet in pallets)
             {
-                // Добавляем палету в репозиторий.
+                SetMissionIdForEntities(pallet, mission.Id);
+
                 var addedPallet = await _palletModelRepository.AddAsync(pallet);
                 await _palletModelRepository.SaveAsync();
 
-                // Генерируем код для палеты на основе информации о компоновке продукта и ID палеты.
-                addedPallet.Code = $"01{productLayoutInfo.Gtin}37{pallet.Boxes.Count}21{addedPallet.Id}";
+                // Генерируем код для палеты на основе информации о компоновке продукта и ID палеты.                
+                addedPallet.Code = GenerateCode(missionModel.Gtin, pallet.Boxes.Count, addedPallet.Id);
                 _palletModelRepository.Update(addedPallet);
 
                 // Генерируем коды для коробок на палете.
                 foreach (var box in pallet.Boxes)
                 {
-                    box.Code = $"01{productLayoutInfo.Gtin}37{box.Products.Count}21{box.Id}";
+                    box.Code = GenerateCode(missionModel.Gtin, box.Products.Count, box.Id);
                     _boxModelRepository.Update(box);
                 }
             }
 
             // Сохраняем изменения в репозитории.
             await _palletModelRepository.SaveAsync();
+        }
+
+        private void SetMissionIdForEntities(PalletModel pallet, int missionId)
+        {
+            pallet.MissionId = missionId;
+            foreach (var box in pallet.Boxes)
+            {
+                box.MissionId = missionId;
+                foreach (var product in box.Products)
+                {
+                    product.MissionId = missionId;
+                }
+            }
+        }
+
+        private string GenerateCode(string gtin, int count, int id)
+        {
+            return $"01{gtin}37{count}21{id}";
         }
     }
 

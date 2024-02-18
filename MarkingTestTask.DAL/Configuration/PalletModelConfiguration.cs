@@ -10,6 +10,9 @@ namespace MarkingTestTask.DAL.Configuration
         {
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Id).ValueGeneratedOnAdd();
+            builder.HasOne(p => p.Mission)
+               .WithMany(m => m.Pallets)
+               .HasForeignKey(p => p.MissionId);
         }
     }
 }

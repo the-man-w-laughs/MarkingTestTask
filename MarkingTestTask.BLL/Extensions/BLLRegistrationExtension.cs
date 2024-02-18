@@ -8,9 +8,12 @@ namespace MarkingTestTask.BLL.Extensions
     {
         public static void RegisterBLLDependencies(this IServiceCollection services)
         {
-            services.AddSingleton<IProductInfoRetrievalService, ProductInfoRetrievalService>();
+            services.AddSingleton<IMissionInfoRetrievalService, MissionInfoRetrievalService>();
             services.AddSingleton<ICodeImportService, CodeImportService>();
             services.AddSingleton<IBoxPalletPopulationService, BoxPalletPopulationService>();
+            services.AddSingleton<ILayoutService, LayoutService>();
+
+            services.RegisterAutomapperProfiles();
         }
     }
 }
