@@ -35,7 +35,7 @@ namespace MarkingTestTask.BLL.Services
             };
             string json = JsonConvert.SerializeObject(missionJsonDto, Formatting.Indented, settings);
 
-            string dateAndTime = DateTime.Now.ToString("yyMMdd_HHmm");
+            string dateAndTime = DateTime.Now.ToString("ddMMyy_HHmm");
             string filename = $"{mission.Gtin}_result_file_{dateAndTime}.json";
             string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
             string filePath = Path.Combine(directoryPath, filename);
