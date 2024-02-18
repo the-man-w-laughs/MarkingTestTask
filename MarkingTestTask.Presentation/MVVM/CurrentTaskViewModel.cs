@@ -22,6 +22,7 @@ namespace MarkingTestTask.Presentation.MVVM
         private bool _isImportCodesButtonBusy;
         private readonly IProductInfoRetrievalService _productInfoRetrievalService;
         private readonly ICodeImportService _codeImportService;
+        private readonly IBoxPalletPopulationService _boxPalletPopulationService;
 
         public bool IsImportCodesButtonBusy
         {
@@ -29,10 +30,11 @@ namespace MarkingTestTask.Presentation.MVVM
             set => SetProperty(ref _isImportCodesButtonBusy, value, nameof(IsImportCodesButtonBusy));
         }
 
-        public CurrentTaskViewModel(IProductInfoRetrievalService productInfoRetrievalService, ICodeImportService codeImportService)
+        public CurrentTaskViewModel(IProductInfoRetrievalService productInfoRetrievalService, ICodeImportService codeImportService, IBoxPalletPopulationService boxPalletPopulationService)
         {
             _productInfoRetrievalService = productInfoRetrievalService;
             _codeImportService = codeImportService;
+            _boxPalletPopulationService = boxPalletPopulationService;
             ImportCodesCommand = new RelayCommand(async parameter => await ImportCodesAsync(), (_) => !IsImportCodesButtonBusy);
 
             LoadProductInfo();
@@ -63,6 +65,7 @@ namespace MarkingTestTask.Presentation.MVVM
                 {
                     var selectedFilePath = openFileDialog.FileName;
                     var codes = _codeImportService.ImportCodesFromFile(selectedFilePath, CurrentTaskInfo.Gtin);
+                    await _boxPalletPopulationService.PopulateBoxesAndPalletsAsync(CurrentTaskInfo, codes);
                 }
             }
             catch (Exception ex)

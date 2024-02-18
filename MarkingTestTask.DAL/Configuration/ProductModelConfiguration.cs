@@ -9,6 +9,7 @@ namespace MarkingTestTask.DAL.Configuration
         public void Configure(EntityTypeBuilder<ProductModel> builder)
         {
             builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).ValueGeneratedOnAdd();
             builder.HasOne(p => p.Box)
                    .WithMany(b => b.Products)
                    .HasForeignKey(p => p.BoxId);

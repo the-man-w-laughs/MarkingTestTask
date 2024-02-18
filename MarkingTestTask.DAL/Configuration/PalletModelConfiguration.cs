@@ -9,6 +9,7 @@ namespace MarkingTestTask.DAL.Configuration
         public void Configure(EntityTypeBuilder<PalletModel> builder)
         {
             builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).ValueGeneratedOnAdd();
         }
     }
 }

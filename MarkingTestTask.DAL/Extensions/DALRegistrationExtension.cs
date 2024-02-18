@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MarkingTestTask.DAL.Extensions
 {
-    public static class BLLRegistrationExtension
+    public static class DALRegistrationExtension
     {
         public static void RegisterDALDependencies(this IServiceCollection services)
         {

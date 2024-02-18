@@ -10,6 +10,7 @@ namespace MarkingTestTask.BLL.Extensions
         {
             services.AddSingleton<IProductInfoRetrievalService, ProductInfoRetrievalService>();
             services.AddSingleton<ICodeImportService, CodeImportService>();
+            services.AddSingleton<IBoxPalletPopulationService, BoxPalletPopulationService>();
         }
     }
 }
