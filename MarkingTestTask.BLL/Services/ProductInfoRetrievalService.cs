@@ -15,7 +15,7 @@ namespace MarkingTestTask.BLL.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<ProductLayoutInfoDto> GetProductLayoutInfoAsync()
+        public async Task<ProductLayoutInfoDto> GetProductInfoAsync()
         {
             HttpResponseMessage response = await _httpClient.GetAsync(ProductUrl);
             response.EnsureSuccessStatusCode();

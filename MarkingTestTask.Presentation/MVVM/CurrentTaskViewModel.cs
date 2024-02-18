@@ -1,12 +1,11 @@
 ﻿using MarkingTestTask.BLL.Contracts;
 using MarkingTestTask.BLL.Dtos;
 using Microsoft.Win32;
-using System.ComponentModel;
 using System.Windows;
 
 namespace MarkingTestTask.Presentation.MVVM
 {
-    public class CurrentTaskViewModel : INotifyPropertyChanged
+    public class CurrentTaskViewModel : BaseViewModel
     {
         private ProductLayoutInfoDto _currentTaskInfo;
         public ProductLayoutInfoDto CurrentTaskInfo
@@ -44,7 +43,7 @@ namespace MarkingTestTask.Presentation.MVVM
         {
             try
             {
-                var result = await _productInfoRetrievalService.GetProductLayoutInfoAsync();
+                var result = await _productInfoRetrievalService.GetProductInfoAsync();
                 CurrentTaskInfo = result;
             }
             catch (Exception ex)
@@ -77,25 +76,6 @@ namespace MarkingTestTask.Presentation.MVVM
                 IsImportCodesButtonBusy = false;
             }
         }
-
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public RelayCommand ImportCodesCommand { get; }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void SetProperty<T>(ref T field, T value, string propertyName)
-        {
-            if (!EqualityComparer<T>.Default.Equals(field, value))
-            {
-                field = value;
-                OnPropertyChanged(propertyName);
-            }
-        }
     }
 }

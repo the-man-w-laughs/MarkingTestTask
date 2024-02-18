@@ -11,6 +11,9 @@ namespace MarkingTestTask.Presentation.Extensions
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<CurrentTaskViewModel>();
             services.AddTransient<MainWindow>();
+            services.AddTransient<ProductsViewModel>();
+            services.AddTransient<BoxesViewModel>();
+            services.AddTransient<PalletsViewModel>();
         }
     }
 }

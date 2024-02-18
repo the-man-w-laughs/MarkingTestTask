@@ -6,17 +6,17 @@ using System.Windows.Controls;
 namespace MarkingTestTask.Presentation.Tabs
 {
     /// <summary>
-    /// Interaction logic for CurrentTaskUserControl.xaml
+    /// Interaction logic for PalletsUserControl.xaml
     /// </summary>
-    public partial class CurrentTaskUserControl : UserControl
+    public partial class PalletsUserControl : UserControl
     {
-        public CurrentTaskUserControl()
+        public PalletsUserControl()
         {
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
 
             InitializeComponent();
-            DataContext = Program.ServiceProvider.GetService<CurrentTaskViewModel>();
+            DataContext = Program.ServiceProvider.GetService<PalletsViewModel>();
         }
     }
 }

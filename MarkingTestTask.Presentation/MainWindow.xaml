@@ -14,18 +14,15 @@
 
 
             <TabItem Header="Продукция">
-                <Grid>
-                </Grid>
+                <tabs:ProductsUserControl />
             </TabItem>
             
             <TabItem Header="Короба">
-                <Grid>
-                </Grid>
+                <tabs:BoxesUserControl />
             </TabItem>
             
             <TabItem Header="Паллеты">
-                <Grid>
-                </Grid>
+                <tabs:PalletsUserControl />
             </TabItem>
         </TabControl>
     </Grid>
